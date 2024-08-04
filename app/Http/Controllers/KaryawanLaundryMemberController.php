@@ -14,9 +14,7 @@ class KaryawanLaundryMemberController extends Controller
         $dataLaundryMember = DB::table('data_laundry_member')
             ->join('member', 'member.member_id', '=', 'data_laundry_member.member_id')
             ->join('pegawai', 'pegawai.id_pegawai', '=', 'data_laundry_member.id_pegawai')
-            ->join('users', 'users.id', '=', 'pegawai.user_id')
             ->select('member.nama_member', 'pegawai.nama_pegawai', 'data_laundry_member.*')
-            ->where('users.id', $id)
             ->get();
         return view('levelKaryawan.dataLaundryMember.index', compact('dataLaundryMember'));
     }

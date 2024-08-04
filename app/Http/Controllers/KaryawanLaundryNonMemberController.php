@@ -13,9 +13,7 @@ class KaryawanLaundryNonMemberController extends Controller
         $id = auth()->user()->id;
         $dataLaundryNonMember = DB::table('data_laundry_non_member')
             ->join('pegawai', 'pegawai.id_pegawai', '=', 'data_laundry_non_member.id_pegawai')
-            ->join('users', 'users.id', '=', 'pegawai.user_id')
             ->select('pegawai.nama_pegawai', 'data_laundry_non_member.*')
-            ->where('users.id', $id)
             ->get();
         return view('levelKaryawan.dataLaundryNonMember.index', compact('dataLaundryNonMember'));
     }
