@@ -2,72 +2,83 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LaundryMember;
 use App\Models\Member;
-use Illuminate\View\View;
-use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MemberController extends Controller
 {
     public function index(): View
     {
-       $dataMember = Member::latest()->paginate(10);
-       return view('member.index',compact('dataMember'));
+        $member = Member::all();
+        return view('levelAdmin.member.index', compact('member'));
     }
-
     public function create(): View
     {
-        return view('member.create');
+        $user = User::where('level', 'Member')->get();
+        return view('levelAdmin.member.create', compact('user'));
     }
 
     public function store(Request $request): RedirectResponse
     {
-       
-        //validate form
         $request->validate([
-            'nama_member'      => 'required|min:2|unique:member,nama_member'
+            'nama_member' => 'required',
+            'no_identitas' => 'required|unique:member,no_identitas',
+            'alamat' => 'required',
+            'no_hp' => 'required',
+            'tgl_join' => 'required',
         ]);
 
-        Pegawai::create([
-            'nama_member'        => $request->nama_member,
-            
+        Member::create([
+            'nama_member' => $request->nama_member,
+            'no_identitas' => $request->no_identitas,
+            'alamat' => $request->alamat,
+            'no_hp' => $request->no_hp,
+            'tgl_join' => $request->tgl_join,
         ]);
-        //redirect to index
-        return redirect()->route('member.index')->with(['success' => 'Data Berhasil Disimpan!']);
+        return redirect()->route('admin.member.index')->with(['success' => 'Data Berhasil Ditambahkan']);
     }
-
     public function edit(string $id): View
     {
-        $dataMember = Member::findOrFail($id);
-        return view('member.edit', compact('dataMember'));
-    }
-
-    public function show(string $id): View
-    {
         $member = Member::findOrFail($id);
-
-        return view('member.show', compact('member'));
+        return view('levelAdmin.member.edit',  compact('member'));
     }
 
     public function update(Request $request, $id): RedirectResponse
     {
-        //validate form
         $request->validate([
-            'nama_member'      => 'required|min:2'
+            'no_identitas' => 'required',
+            'nama_member' => 'required',
+            'alamat' => 'required',
+            'no_hp' => 'required',
+            'tgl_join' => 'required',
+
         ]);
 
-        $dataMember = Member::findOrFail($id);
-        $dataMember->update([
-             'nama_member'  => $request->nama_member
-            ]);
-
-        return redirect()->route('member.index')->with(['success' => 'Data Berhasil Diubah!']);
+        $member = Member::findOrFail($id);
+        $member->update([
+            'no_identitas' => $request->no_identitas,
+            'nama_member' => $request->nama_member,
+            'alamat' => $request->alamat,
+            'no_hp' => $request->no_hp,
+            'tgl_join' => $request->tgl_join,
+        ]);
+        return redirect()->route('admin.member.index')->with(['success' => 'Data Berhasil Diedit']);
+    }
+    public function show(string $id): View
+    {
+        $member = Member::findOrFail($id);
+        return view('levelAdmin.member.show', compact('member'));
     }
 
     public function destroy($id): RedirectResponse
     {
         $member = Member::findOrFail($id);
         $member->delete();
-        return redirect()->route('member.index')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('admin.member.index')->with(['success' => 'Data Berhasil Dihapus']);
     }
 }

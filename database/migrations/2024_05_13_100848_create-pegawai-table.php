@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pegawai', function (Blueprint $table) {
-            $table->id('pegawai_id');
-            $table->string('nama_pegawai', 150);
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('id_pegawai')->autoIncrement()->unique();
+            $table->string('nama_pegawai');
             $table->text('alamat');
-            $table->enum('jenis_kelamin', ['L', 'P']);
-            $table->enum('jabatan', ['Kasir', 'Admin', 'Karyawan']);
-            $table->enum('status', ['Aktif', 'Tidak_Aktif']);
+            $table->string('no_hp');
             $table->timestamps();
         });
     }

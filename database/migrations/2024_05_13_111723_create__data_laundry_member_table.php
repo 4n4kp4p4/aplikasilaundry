@@ -12,13 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('data_laundry_member', function (Blueprint $table) {
-            $table->id('no_transaksi');
-            $table->date('tanggal_transaksi');
-            $table->bigInteger('member_id');
-            $table->bigInteger('id_pegawai');
+            $table->unsignedBigInteger('no_transaksi')->autoIncrement()->unique();
+            $table->date('tgl_transaksi');
+            $table->unsignedBigInteger('member_id');;
+            $table->foreign('member_id')->references('member_id')->on('member');
+            $table->unsignedBigInteger('id_pegawai');
+            $table->foreign('id_pegawai')->references('id_pegawai')->on('pegawai');
             $table->text('keterangan');
-            $table->enum('status_laundry', ['menunggu', 'diproses', 'selesai']);
-            $table->enum('status_pembayaran', ['bayar','belum']);
+            $table->enum('status_laundry', ['Menunggu', 'Diproses', 'Selesai']);
+            $table->enum('status_pembayaran', ['Bayar', 'Belum']);
             $table->text('lokasi_kirim');
             $table->timestamps();
         });

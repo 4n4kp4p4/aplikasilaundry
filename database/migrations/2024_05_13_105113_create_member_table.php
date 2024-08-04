@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('members', function (Blueprint $table) {
-            $table->bigInteger('member_id')->primary();
-            $table->string('no_identitas', 16)->unique();
-            $table->string('nama_member', 150);
-            $table->string('password', 100);
+        Schema::create('member', function (Blueprint $table) {
+            $table->unsignedBigInteger('member_id')->autoIncrement()->unique();
+            $table->string('no_identitas')->unique();
+            $table->string('nama_member');
             $table->text('alamat');
-            $table->string('no_hp', 15);
+            $table->string('no_hp');
             $table->date('tgl_join');
             $table->timestamps();
         });
